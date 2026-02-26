@@ -1,0 +1,52 @@
+// Problem: A. To Zero  A. 到零
+// Contest: Codeforces - Educational Codeforces Round 176 (Rated for Div. 2)教育性 Codeforces 第 176 场（对二队评级）
+// URL: https://mirror.codeforces.com/contest/2075/problem/0
+// Memory Limit: 512 MB
+// Time Limit: 2000 ms
+// 
+// Powered by CP Editor (https://cpeditor.org)
+
+#include<bits/stdc++.h>
+
+using i32 = int;
+using i64 = long long;
+using u32 = unsigned;
+using u64 = unsigned long long;
+using u128 = unsigned __int128;
+#define int long long
+using namespace std;
+
+void solve()
+{
+	int a=0;
+	int n,k;
+	cin>>n>>k;
+	if (n%2 == 0) k--;
+	else {n-=k;k--;a++;}
+	
+	if (n <= 0) {cout<<1<<endl;return;}
+	
+	int cnt=n/k;//  32/6
+	if (cnt*k == n) cout<<a+cnt<<endl;
+	else cout<<a+1+cnt<<endl;
+}
+
+signed main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(nullptr);
+	int t;
+	cin>>t;
+	while (t--)
+		solve();
+	return 0;
+}
+
+
+
+
+
+
+
+
+
