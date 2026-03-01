@@ -1,8 +1,8 @@
-// Problem: H. Loose Subsequences
+// Problem: I. Team Naming
 // Contest: Codeforces - The 2025 Jiangsu Collegiate Programming Contest, The 2025 Guangdong Provincial Collegiate Programming Contest
-// URL: https://codeforces.com/gym/105945/problem/H
+// URL: https://codeforces.com/gym/105945/problem/I
 // Memory Limit: 512 MB
-// Time Limit: 1000 ms
+// Time Limit: 3000 ms
 // 
 // Powered by CP Editor (https://cpeditor.org)
 
@@ -11,40 +11,45 @@
 #define ull unsigned long long
 using namespace std;
 
-const int p=998244353;
 void solve()
 {
-	int n,k;
-	cin>>n>>k;
-	string s;
-	cin>>s;
-	vector<int> dp(n+1);
-	vector<int> pre(n+1);
-	s=" "+s;
+	int n;
+	cin>>n;
+	vector<int> x(n),y(n),z(n);
+	for(int i=0;i<n;i++) cin>>x[i]>>y[i]>>z[i];
 	
-	vector<int> lst(26);
-	for(int i=1;i<=n;i++) {
-		if (lst[s[i]-'a'] == 0) {
-			dp[i]=pre[max(0ll,i-k-1)]+1;	
-			dp[i]%=p;
-		}
-		else {
-			dp[i]=pre[max(0ll,i-k-1)]-pre[max(0ll,lst[s[i]-'a']-k-1)];
-			dp[i]%=p;
-		}
-		pre[i]=pre[i-1]+dp[i];
-		pre[i]%=p;
-		lst[s[i]-'a']=i;
+	map<int,int> a,b,c;
+	map<array<int,2>,int> d,e,f;
+	for(int i=0;i<n;i++) {
+		a[x[i]]++;
+		b[y[i]]++;
+		c[z[i]]++;
+		d[{x[i],y[i]}]++;
+		e[{x[i],z[i]}]++;
+		f[{y[i],z[i]}]++;
 	}
-	cout<<(pre[n]+p)%p<<"\n";
+	
+	int A,B,C,D,E,F;
+	int ans=0;
+	for(int i=0;i<n;i++) {
+		D=d[{x[i],y[i]}]-1;
+		E=e[{x[i],z[i]}]-1;
+		F=f[{y[i],z[i]}]-1;
+		A=a[x[i]]-1-D-E;
+		B=b[y[i]]-1-D-F;
+		C=c[z[i]]-1-E-F;
+		ans+=A*B+A*C+A*D+A*E+A*F+B*C+B*D+B*E+B*F+C*D+C*E+C*F+D*E+D*F+E*F;
+		ans+=D*(D-1)/2+E*(E-1)/2+F*(F-1)/2;
+	}
+	cout<<ans;
 }
 
 signed main()
 {
 	ios::sync_with_stdio(0);
 	cin.tie(nullptr);
-	int t;cin>>t;
-	while (t--)
+	// int t;cin>>t;
+	// while (t--)
 		solve();
 	return 0;
 }
