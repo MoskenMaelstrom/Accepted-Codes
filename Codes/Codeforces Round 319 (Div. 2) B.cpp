@@ -22,11 +22,12 @@ void solve()
 	else {
 		vector<bool> dp(m);
 		for(int i=1;i<=n;i++) {
-			dp[a[i]]=1;
 			vector<bool> ndp(m);
+			ndp[a[i]%m]=1;
 			for(int j=0;j<m;j++) {
-				if (dp[j]) dp[(j+a[i])%m]=1;
+				if (dp[j]) ndp[(j+a[i])%m]=1;
 			}
+			for(int j=0;j<m;j++) if (ndp[j]) dp[j]=1;
 		}
 		if (dp[0]) cout<<"YES";
 		else cout<<"NO";
