@@ -1,8 +1,8 @@
-// Problem: P4551 最长异或路径
+// Problem: U109923 [Codechef REBXOR]Nikitosh and xor
 // Contest: Luogu
-// URL: https://www.luogu.com.cn/problem/P4551
-// Memory Limit: 512 MB
-// Time Limit: 1000 ms
+// URL: https://www.luogu.com.cn/problem/U109923
+// Memory Limit: 500 MB
+// Time Limit: 3000 ms
 // 
 // Powered by CP Editor (https://cpeditor.org)
 
@@ -13,7 +13,7 @@ using u64 = unsigned long long;
 using i128 = __int128;
 using namespace std;
 
-const int N=1e5*32;
+const int N=4e5*32;
 int tree[N][2];
 int pass[N];
 int len=1;
@@ -30,6 +30,18 @@ void insert(int x) {
         }
         cur=tree[cur][b];
         pass[cur]++;
+    }
+}
+
+void erase(int x) {
+    int cur=0;
+    pass[cur]--;
+    for (int i=30;i>=0;i--) {
+        int b=(x>>i)&1;
+        int nxt=tree[cur][b];
+        pass[nxt]--;
+        if (pass[nxt] == 0) tree[cur][b]=0;
+        cur=nxt;
     }
 }
 
@@ -51,32 +63,38 @@ void solve()
 {
 	int n;
 	cin>>n;
-	vector adj(n,vector<array<int,2>>(0));
-	for(int i=0;i<n-1;i++) {
-		int u,v,w;
-		cin>>u>>v>>w;
-		u--,v--;
-		adj[u].push_back({v,w});
-		adj[v].push_back({u,w});
+	vector<int> a(n+1);
+	for(int i=1;i<=n;i++) cin>>a[i];
+	vector<int> L(n+2);
+	insert(0);
+	int x=0;
+	for(int i=1;i<=n;i++) {
+		x^=a[i];
+		L[i]=max(L[i-1],query(x));
+		insert(x);
 	}
-	vector<int> vec(n);
-	auto dfs=[&](auto&& self,int u,int fa) -> void {
-		for(auto [v,w] : adj[u]) {
-			if (v == fa) continue;
-			vec[v]=vec[u]^w;
-			self(self,v,u);
-		}
-	};
-	dfs(dfs,0,-1);
 	
-	for(auto e1 : vec) {
-		insert(e1);
+	for(int i=0;i<len;i++) {
+		pass[i]=0;
+		tree[i][0]=0;
+		tree[i][1]=0;
 	}
+	len=1;
+	
+	x=0;
+	vector<int> R(n+2);
+	insert(0);
+	for(int i=n;i>=1;i--) {
+		x^=a[i];
+		R[i]=max(R[i+1],query(x));
+		insert(x);
+	}
+	
 	int ans=0;
-	for(auto e1 : vec) {
-		ans=max(ans,query(e1));
+	for(int i=1;i<=n-1;i++) {
+		ans=max(ans,L[i]+R[i+1]);
 	}
-	cout<<ans<<"\n";
+	cout<<ans;
 }
 
 signed main()
